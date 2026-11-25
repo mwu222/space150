@@ -96,10 +96,14 @@ export default class ScheduleLogic extends DCLogic {
     const tasks = (st.tasks || []).map((t) => ({ id: t.id, title: t.text, mins: t.plan ? Math.round(t.plan / 60) : 0, doneMin: Math.round((t.logged || 0) / 60), done: !!t.done, showFrom: t.showFrom || null, note: t.note || '', kind: t.kind || null }));
     // Tasks added for a future day only show up from that day on.
     const shownOn = (ds) => tasks.filter((t) => !t.showFrom || t.showFrom <= ds);
-    // Each day has its own to-do list: today's is your Home list, other days hold tasks added for them.
-    // A task leaves the list once it's dragged onto a day (move it on the timeline after that).
-    const placedIds = new Set((st.dayPlan || []).map((b) => b.taskId));
-    const trayFor = (ds) => tasks.filter((t) => !t.done && !placedIds.has(t.id) && (ds === today ? (!t.showFrom || t.showFrom <= today) : t.showFrom === ds));
+    // The to-do list stays the same on every date, so tasks can be dragged onto future days.
+    // A task added for a future day joins the list from that day on. A task leaves a day's list
+    // once it's on that day's timeline, but stays on the list for every other day.
+    const placedOn = (ds) => new Set((st.dayPlan || []).filter((b) => b.date === ds).map((b) => b.taskId));
+    const trayFor = (ds) => { const here = placedOn(ds); return tasks.filter((t) => !t.done && !here.has(t.id) && (!t.showFrom || t.showFrom <= ds)); };
+    // Other days (today on) a task is already planned for, shown on its chip.
+    const shortDate = (s) => { const d = parse(s); return DOWL[d.getDay()].slice(0, 3) + ', ' + MON[d.getMonth()].slice(0, 3) + ' ' + d.getDate(); };
+    const plannedElsewhere = (id) => (st.dayPlan || []).filter((b) => b.taskId === id && b.date !== st.cur && b.date >= today).map((b) => b.date).sort();
     const taskById = (id) => tasks.find((t) => t.id === id);
     const taskPal = (t) => !t ? pal.task : t.done ? pal.done : (t.kind && pal[t.kind]) || pal.task;
     const taskTag = (t) => t && t.kind && pal[t.kind] ? kindLabel(t.kind) : '';
@@ -116,15 +120,15 @@ export default class ScheduleLogic extends DCLogic {
     const dayRaw = st.dayPlan.filter((b) => b.date === st.cur && taskById(b.taskId)).map((b) => { const t = taskById(b.taskId); return { ...b, title: t.title, dur: durOf(t), done: t.done, kind: t.kind }; }).sort((a, b) => a.start - b.start);
     const schedFor = (taskId) => dayRaw.find((b) => b.taskId === taskId);
     const taskChips = trayFor(st.cur).map((t) => {
-      const sb = schedFor(t.id), sel = st.selTask === t.id;
+      const sb = schedFor(t.id), sel = st.selTask === t.id, other = plannedElsewhere(t.id);
       const alloc = t.mins ? dur(t.mins) + ' allocated' + (t.doneMin ? ' · ' + dur(t.doneMin) + ' done' : '') : 'No time allocated · 30 min block';
       return {
         title: t.title, sel, deco: t.done ? 'line-through' : 'none', titleColor: t.done ? '#6B655A' : '#2B2A27',
-        sub: (t.done ? 'Done · ' : '') + alloc + (sb ? ' · ' + tm(sb.start) : ''),
+        sub: (t.done ? 'Done · ' : '') + alloc + (sb ? ' · ' + tm(sb.start) : '') + (other.length ? ' · on ' + shortDate(other[0]) + (other.length > 1 ? ' +' + (other.length - 1) : '') : ''),
         subColor: sb ? '#3E6B33' : '#6B655A',
         border: sel ? '#2B2A27' : '#D8D1C2', accent: sb ? '#6B8A5E' : '#8FA8E8',
         bg: sel ? '#FBF3D9' : (sb ? '#F4F8F1' : '#FFFFFF'),
-        label: t.title + ', ' + alloc + (sb ? ', scheduled at ' + tm(sb.start) : ', not scheduled') + '. Drag onto the day, or press Enter then pick a time.',
+        label: t.title + ', ' + alloc + (sb ? ', scheduled at ' + tm(sb.start) : ', not scheduled') + (other.length ? ', also planned for ' + other.map(shortDate).join(', ') : '') + '. Drag onto the day, or press Enter then pick a time.',
         down: (e) => { if (e.button && e.button !== 0) return; if (e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId); this.td = { id: t.id, sx: e.clientX, sy: e.clientY, moved: false }; },
         move: (e) => {
           const d = this.td; if (!d || d.id !== t.id) return;
@@ -411,8 +415,8 @@ export default class ScheduleLogic extends DCLogic {
       goToday: () => this.setState({ cur: today, selTask: null }),
       openDay: () => this.setState({ view: 'day' }),
       taskChips, noTasks: !trayFor(st.cur).length,
-      trayFrom: st.cur === today ? 'From your Home to-do list.' : 'Tasks added for this day.',
-      noTasksText: st.cur === today ? (tasks.some((t) => !t.done && placedIds.has(t.id)) ? 'Everything on your to-do list is scheduled.' : 'Your to-do list on Home is empty.') : 'Nothing added for this day yet.',
+      trayFrom: 'From your Home to-do list, plus tasks added for this day.',
+      noTasksText: tasks.some((t) => !t.done && placedOn(st.cur).has(t.id)) ? 'Everything on your to-do list is scheduled for this day.' : 'Your to-do list is empty.',
       dtText: st.dtText || '', dtOnText: (e) => this.setState({ dtText: e.target.value, dtNote: '' }),
       // How long: whole hours (0–9) and minutes (0–60), typed in.
       dtH: st.dtH != null ? st.dtH : '0', dtM: st.dtM != null ? st.dtM : '30',

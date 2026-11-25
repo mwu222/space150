@@ -66,13 +66,17 @@ it("adding a to-do task from the week pop-up saves the placement", async () => {
   expect(errors).toEqual([]);
 });
 
-it("each day has its own to-do list and a task leaves it once scheduled", async () => {
+it("the to-do list stays on every date; a task only leaves the list of the day it's scheduled on", async () => {
   await at("/schedule");
   const tray = () => document.querySelector('section[aria-label="Tasks to schedule"]')!.textContent || "";
   expect(tray()).not.toContain("Problem set 3");          // already dragged onto today
-  expect(tray()).toContain("Everything on your to-do list is scheduled.");
+  expect(tray()).toContain("Everything on your to-do list is scheduled for this day.");
   fireEvent.click(screen.getByRole("button", { name: "Next day" })); await wait();
-  expect(tray()).toContain("Nothing added for this day yet.");
+  expect(tray()).toContain("Problem set 3");              // still there, so it can be dragged onto a future day
+  expect(tray()).toMatch(/Problem set 3.*· on \w{3}, \w{3} \d+/);   // and shows it's planned for today
+  fireEvent.click(screen.getByRole("button", { name: "Next day" })); await wait();
+  expect(tray()).toContain("Problem set 3");
+  fireEvent.click(screen.getByRole("button", { name: "Previous day" })); await wait();
   const inp = screen.getByLabelText("New task for this day") as HTMLInputElement;
   fireEvent.change(inp, { target: { value: "Return library books" } });
   fireEvent.keyDown(inp, { key: "Enter" }); await wait();
