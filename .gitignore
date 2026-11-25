@@ -2,3 +2,7 @@ node_modules
 dist
 .env.local
 .DS_Store
+
+# local build cache and deliverable zips
+tsconfig.tsbuildinfo
+*.zip
