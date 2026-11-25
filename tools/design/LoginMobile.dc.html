@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPACE150 — Log in (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Karla:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2B2A27}a:hover{color:#B5562E}
+input:focus{outline:2px solid #E8A838;outline-offset:1px}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 844px; background: #EDE8DD; color: #2B2A27; font-family: Karla, system-ui, sans-serif; padding: 16px 12px; box-sizing: border-box">
+  <div style="display: flex; flex-direction: column; background: #FAF8F3; border: 1px solid #D8D1C2; border-radius: 4px">
+
+    <section aria-label="About SPACE150" style="padding: 20px 20px 18px; border-bottom: 1px solid #D8D1C2; background-image: radial-gradient(#E3DDD0 1px, transparent 1px); background-size: 16px 16px; display: flex; align-items: center; gap: 14px">
+      <svg aria-hidden="true" viewBox="0 0 120 110" style="width: 84px; height: 78px; flex-shrink: 0">
+        <defs><radialGradient id="lgm"><stop offset="0" stop-color="#E8A838" stop-opacity="0.5"></stop><stop offset="0.6" stop-color="#E8A838" stop-opacity="0.12"></stop><stop offset="1" stop-color="#E8A838" stop-opacity="0"></stop></radialGradient></defs>
+        <ellipse cx="60" cy="62" rx="58" ry="46" fill="url(#lgm)"></ellipse>
+        <path d="M40 18 L80 18 L92 48 L28 48 Z" fill="#FFFDF6" stroke="#2B2A27" stroke-width="2" stroke-linejoin="round"></path>
+        <line x1="60" y1="48" x2="60" y2="92" stroke="#2B2A27" stroke-width="2"></line>
+        <line x1="42" y1="96" x2="78" y2="96" stroke="#2B2A27" stroke-width="2" stroke-linecap="round"></line>
+      </svg>
+      <div>
+        <div style="font-family: Newsreader, serif; font-size: 18px; letter-spacing: 0.18em">SPACE150</div>
+        <div style="font-family: Newsreader, serif; font-size: 26px; line-height: 1.05; margin-top: 4px">Your lamp is waiting.</div>
+      </div>
+    </section>
+
+    <section aria-label="Log in or sign up" style="padding: 0 20px 26px; box-sizing: border-box; position: relative">
+      <div role="tablist" aria-label="Account" style="display: flex; gap: 6px; margin-top: -1px">
+        <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="2">
+          <button role="tab" aria-selected="{{tb.on}}" onClick="{{tb.pick}}" style="height: {{tb.h}}px; padding: 0 22px; border: 1px solid {{tb.border}}; border-top: none; border-radius: 0 0 6px 6px; background: {{tb.bg}}; color: {{tb.fg}}; font-family: Karla, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; cursor: pointer">{{tb.label}}</button>
+        </sc-for>
+      </div>
+
+      <h2 style="margin: 24px 0 4px; font-family: Newsreader, serif; font-weight: 400; font-size: 30px">{{heading}}</h2>
+      <p style="margin: 0 0 22px; font-size: 15px; color: #6B655A">{{subheading}}</p>
+
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <sc-if value="{{isSignup}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 16px">
+            <div>
+              <label for="name" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Your name</label>
+              <input id="name" value="{{name}}" onChange="{{onName}}" autocomplete="name" placeholder="What friends will see" style="width: 100%; height: 48px; box-sizing: border-box; border: 1px solid #D8D1C2; border-radius: 3px; background: #FFFFFF; padding: 0 14px; font-family: Karla, sans-serif; font-size: 16px">
+            </div>
+            <div>
+              <label for="uname" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Username</label>
+              <div style="display: flex; align-items: center; border: 1px solid {{unameBorder}}; border-radius: 3px; background: #FFFFFF">
+                <span aria-hidden="true" style="padding: 0 0 0 14px; font-size: 16px; color: #6B655A">@</span>
+                <input id="uname" value="{{uname}}" onChange="{{onUname}}" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="24" placeholder="How friends find you" style="flex-grow: 1; min-width: 0; height: 48px; box-sizing: border-box; border: none; background: transparent; padding: 0 14px 0 2px; font-family: Karla, sans-serif; font-size: 16px">
+              </div>
+              <span role="status" style="display: block; min-height: 18px; margin-top: 4px; font-size: 12px; color: {{unameColor}}">{{unameNote}}</span>
+            </div>
+          </div>
+        </sc-if>
+        <div>
+          <label for="email" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">{{emailLabel}}</label>
+          <input id="email" value="{{email}}" onChange="{{onEmail}}" autocomplete="{{emailAuto}}" placeholder="you@example.com" style="width: 100%; height: 48px; box-sizing: border-box; border: 1px solid {{emailBorder}}; border-radius: 3px; background: #FFFFFF; padding: 0 14px; font-family: Karla, sans-serif; font-size: 16px">
+        </div>
+        <sc-if value="{{isLogin}}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px">
+            <label for="pw" style="font-size: 13px; font-weight: 700">Password</label>
+            <sc-if value="{{isLogin}}" hint-placeholder-val="{{ true }}">
+              <a href="#" style="font-size: 13px">Forgot password?</a>
+            </sc-if>
+          </div>
+          <div style="position: relative">
+            <input id="pw" type="{{pwType}}" value="{{pw}}" onChange="{{onPw}}" autocomplete="{{pwAuto}}" placeholder="{{pwHint}}" style="width: 100%; height: 48px; box-sizing: border-box; border: 1px solid {{pwBorder}}; border-radius: 3px; background: #FFFFFF; padding: 0 70px 0 14px; font-family: Karla, sans-serif; font-size: 16px">
+            <button onClick="{{togglePw}}" aria-label="{{pwToggleLabel}}" style="position: absolute; right: 4px; top: 4px; height: 40px; padding: 0 12px; border: none; background: transparent; font-family: Karla, sans-serif; font-size: 13px; font-weight: 700; color: #6B655A; cursor: pointer">{{pwToggleText}}</button>
+          </div>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{isLogin}}" hint-placeholder-val="{{ true }}">
+          <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; min-height: 32px">
+            <input type="checkbox" checked="{{remember}}" onChange="{{toggleRemember}}" style="width: 18px; height: 18px; margin: 0; accent-color: #2B2A27">
+            Keep me logged in on this device
+          </label>
+        </sc-if>
+
+        <sc-if value="{{showError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size: 14px; color: #9A3B1C; background: #FBE9E2; border-radius: 3px; padding: 10px 12px">{{errorText}}</div>
+        </sc-if>
+
+        <sc-if value="{{ready}}" hint-placeholder-val="{{ false }}">
+          <a href="MainMobile.dc.html" style="display: flex; align-items: center; justify-content: center; height: 52px; border-radius: 3px; background: #2B2A27; color: #FAF8F3; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.08em">{{cta}}</a>
+        </sc-if>
+        <sc-if value="{{notReady}}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{tryCta}}" style="height: 52px; border-radius: 3px; border: none; background: #2B2A27; color: #FAF8F3; font-family: Karla, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.08em; cursor: pointer">{{cta}}</button>
+        </sc-if>
+      </div>
+
+
+      <p style="margin: 18px 0 0; font-size: 14px; color: #6B655A; text-align: center">{{switchPrompt}} <button onClick="{{switchMode}}" style="border: none; background: none; padding: 4px; font-family: Karla, sans-serif; font-size: 14px; font-weight: 700; color: #2B2A27; text-decoration: underline; cursor: pointer">{{switchText}}</button></p>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: 'login', name: '', uname: '', email: '', pw: '', showPw: false, remember: true, tried: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const isLogin = s.mode === 'login';
+    const emailOk = s.email.trim().length > 2;
+    const pwOk = isLogin ? s.pw.length > 0 : true;
+    const nameOk = isLogin || s.name.trim().length > 0;
+    const taken = ['maya.k', 'jordan_p', 'sam.lee', 'priya', 'marcusd', 'alexr', 'nina.t'];
+    const u = s.uname.trim(), uFmt = /^[A-Za-z0-9_.]{3,24}$/.test(u), uTaken = taken.includes(u.toLowerCase());
+    const unameOk = isLogin || (uFmt && !uTaken);
+    const emailOk2 = isLogin ? emailOk : /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.email.trim());
+    const ready = emailOk2 && pwOk && nameOk && unameOk;
+    const missing = [];
+    if (!nameOk) missing.push('your name');
+    if (!unameOk) missing.push(uTaken ? 'a different username' : 'a username');
+    if (!emailOk2) missing.push(isLogin ? 'your email or username' : 'your email');
+    if (!pwOk) missing.push('your password');
+    const tabs = [['login', 'LOG IN'], ['signup', 'REQUEST ACCESS']].map(([id, label]) => {
+      const on = s.mode === id;
+      return { label, on, h: on ? 48 : 42, bg: on ? '#2B2A27' : '#DDE4D6', fg: on ? '#FAF8F3' : '#3E4A38', border: on ? '#2B2A27' : '#C7CFBE', pick: () => this.setState({ mode: id, tried: false }) };
+    });
+    return {
+      tabs, isLogin, isSignup: !isLogin,
+      heading: isLogin ? 'Welcome back' : 'Request access',
+      subheading: isLogin ? 'Log in to pick up where you left off.' : 'SPACE150 is invite-only for now. Tell us who you are and we’ll email you when your space is ready.',
+      name: s.name, onName: (e) => this.setState({ name: e.target.value }),
+      uname: s.uname, onUname: (e) => this.setState({ uname: e.target.value.replace(/^@/, '').replace(/\s/g, '') }),
+      unameNote: !u ? (s.tried ? '3–24 letters, numbers, dots or underscores.' : '') : !uFmt ? '3–24 letters, numbers, dots or underscores.' : uTaken ? 'That username is taken.' : '✓ Available',
+      unameColor: (u && (!uFmt || uTaken)) || (s.tried && !u) ? '#9A3B1C' : '#3E6B33',
+      unameBorder: (u && (!uFmt || uTaken)) || (s.tried && !u) ? '#B5562E' : '#D8D1C2',
+      emailLabel: isLogin ? 'Email or username' : 'Email', emailAuto: isLogin ? 'username' : 'email',
+      email: s.email, onEmail: (e) => this.setState({ email: e.target.value }),
+      pw: s.pw, onPw: (e) => this.setState({ pw: e.target.value }),
+      pwType: s.showPw ? 'text' : 'password',
+      pwAuto: isLogin ? 'current-password' : 'new-password',
+      pwHint: isLogin ? '' : 'At least 8 characters',
+      togglePw: () => this.setState({ showPw: !s.showPw }),
+      pwToggleText: s.showPw ? 'Hide' : 'Show',
+      pwToggleLabel: s.showPw ? 'Hide password' : 'Show password',
+      remember: s.remember, toggleRemember: () => this.setState({ remember: !s.remember }),
+      emailBorder: s.tried && !emailOk2 ? '#B5562E' : '#D8D1C2',
+      pwBorder: s.tried && !pwOk ? '#B5562E' : '#D8D1C2',
+      showError: s.tried && !ready,
+      errorText: 'Please add ' + missing.join(', ').replace(/, ([^,]*)$/, ' and $1') + '.',
+      ready, notReady: !ready,
+      tryCta: () => this.setState({ tried: true }),
+      cta: isLogin ? 'LOG IN' : 'REQUEST ACCESS',
+      switchPrompt: isLogin ? 'New here?' : 'Already have a space?',
+      switchText: isLogin ? 'Request access' : 'Log in',
+      switchMode: () => this.setState({ mode: isLogin ? 'signup' : 'login', tried: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

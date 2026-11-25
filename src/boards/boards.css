@@ -1,0 +1,13 @@
+/* GENERATED: global styles from the design boards' <helmet> blocks */
+body{margin:0}
+a{color:#2B2A27}a:hover{color:#B5562E}
+input:focus{outline:2px solid #E8A838;outline-offset:1px}
+.lampwrap .lamptip{display:none}.lampwrap:hover .lamptip{display:block}.lampwrap .lamptip.pinned{display:block}.lampbtn{transition:background-color .15s,border-color .15s}.lampbtn:hover,.lampbtn[aria-expanded="true"]{background-color:#FBF3D9 !important;border-color:#E3CF9A !important}
+@keyframes scoinIn{0%{transform:scale(0) rotateY(0)}31%{transform:scale(1.18) rotateY(540deg)}42%{transform:scale(0.94) rotateY(720deg)}51%{transform:scale(1.04) rotateY(720deg)}58%{transform:scale(1) rotateY(720deg)}92%{transform:scale(1) rotateY(720deg);opacity:1}100%{transform:scale(0.35) translateY(60px) rotateY(720deg);opacity:0}}
+@keyframes scoinGlow{0%{transform:scale(0.2);opacity:0}30%{opacity:0.9}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+@keyframes scoinRay{0%{transform:rotate(var(--a)) translateY(0) scale(0);opacity:0}25%{opacity:1}60%{transform:rotate(var(--a)) translateY(-104px) scale(1);opacity:1}100%{transform:rotate(var(--a)) translateY(-128px) scale(0.4);opacity:0}}
+@keyframes scoinText{0%,21%{transform:translateY(10px);opacity:0}32%,92%{transform:translateY(0);opacity:1}100%{transform:translateY(-6px);opacity:0}}
+@keyframes scoinShade{0%{opacity:0}10%,92%{opacity:1}100%{opacity:0}}
+@keyframes scoinPop{0%{transform:translate(-50%,-50%) scale(0)}60%{transform:translate(-50%,-50%) scale(1.35)}80%{transform:translate(-50%,-50%) scale(0.92)}100%{transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion: reduce){.scfx *{animation-duration:1ms !important;animation-delay:0ms !important}.scfx .scoin-still{animation:scoinShade 4.5s both !important}}
+@media (max-width: 860px){.st > *{flex-basis: 100% !important}}

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPACE150 — Email confirmed</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Karla:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2B2A27}a:hover{color:#B5562E}
+input:focus{outline:2px solid #E8A838;outline-offset:1px}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 860px; background: #EDE8DD; color: #2B2A27; font-family: Karla, system-ui, sans-serif; padding: 28px 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center">
+  <main style="width: 600px; max-width: 600px; background: #FAF8F3; border: 1px solid #D8D1C2; border-radius: 4px; box-shadow: 0 18px 40px rgba(43, 42, 39, 0.10); overflow: hidden">
+    <div style="padding: 24px 32px 18px; border-bottom: 1px solid #D8D1C2; background-image: radial-gradient(#E3DDD0 1px, transparent 1px); background-size: 18px 18px">
+      <div style="font-family: Newsreader, serif; font-size: 22px; letter-spacing: 0.18em">SPACE150</div>
+      <div style="margin-top: 12px">
+        <svg aria-hidden="true" viewBox="0 0 300 200" style="width: 300px; height: 200px; display: block; margin: 0 auto">
+          <defs><radialGradient id="vglowd"><stop offset="0" stop-color="#E8A838" stop-opacity="0.55"></stop><stop offset="0.6" stop-color="#E8A838" stop-opacity="0.14"></stop><stop offset="1" stop-color="#E8A838" stop-opacity="0"></stop></radialGradient></defs>
+          <ellipse cx="96" cy="112" rx="92" ry="80" fill="url(#vglowd)" opacity="{{glow}}"></ellipse>
+          <path d="M70 34 L122 34 L138 74 L54 74 Z" fill="{{shade}}" stroke="#2B2A27" stroke-width="2" stroke-linejoin="round"></path>
+          <line x1="96" y1="74" x2="96" y2="160" stroke="#2B2A27" stroke-width="2"></line>
+          <line x1="70" y1="168" x2="122" y2="168" stroke="#2B2A27" stroke-width="2" stroke-linecap="round"></line>
+          <path d="M14 176 L286 176" stroke="#B8B0A0" stroke-width="1.5" stroke-dasharray="3 5"></path>
+          <g transform="rotate(-5 214 130)">
+            <rect x="160" y="96" width="112" height="72" rx="3" fill="#FFFDF6" stroke="#2B2A27" stroke-width="2"></rect>
+            <path d="M160 99 L216 140 L272 99" fill="none" stroke="#2B2A27" stroke-width="2" stroke-linejoin="round"></path>
+            <rect x="196" y="88" width="40" height="14" fill="#E8B8A6" opacity="0.85"></rect>
+          </g>
+          <sc-if value="{{sealOn}}" hint-placeholder-val="{{ true }}">
+            <g>
+              <circle cx="252" cy="150" r="22" fill="#6B8A5E" stroke="#2B2A27" stroke-width="2"></circle>
+              <path d="M241 150 L249 158 L264 142" fill="none" stroke="#FAF8F3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+          </sc-if>
+          <sc-if value="{{clockOn}}" hint-placeholder-val="{{ false }}">
+            <g>
+              <circle cx="252" cy="150" r="22" fill="#FBE9E2" stroke="#2B2A27" stroke-width="2"></circle>
+              <path d="M252 138 L252 151 L261 156" fill="none" stroke="#9A3B1C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+          </sc-if>
+        </svg>
+      </div>
+    </div>
+    <section aria-live="polite" style="padding: 40px 56px 44px; text-align: center">
+      <h1 style="margin: 0; font-family: Newsreader, serif; font-weight: 400; font-size: 42px; line-height: 1.08">{{heading}}</h1>
+      <p style="margin: 12px auto 0; max-width: 420px; font-size: 16px; line-height: 1.55; color: #6B655A">{{sub}}</p>
+      <sc-if value="{{emailOn}}" hint-placeholder-val="{{ false }}">
+        <div style="display: inline-block; margin-top: 14px; padding: 6px 14px; border: 1px dashed #B8B0A0; border-radius: 3px; background: #FFFDF6; font-size: 15px; font-weight: 700; overflow-wrap: anywhere">{{email}}</div>
+      </sc-if>
+      <sc-if value="{{formOn}}" hint-placeholder-val="{{ false }}">
+        <div style="margin: 20px auto 0; max-width: 400px; text-align: left">
+          <label for="vemail" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Email</label>
+          <input id="vemail" value="{{email}}" onChange="{{onEmail}}" onKeyDown="{{emailKey}}" autocomplete="email" placeholder="you@example.com" style="width: 100%; height: 48px; box-sizing: border-box; border: 1px solid {{emailBorder}}; border-radius: 3px; background: #FFFFFF; padding: 0 14px; font-family: Karla, sans-serif; font-size: 16px">
+        </div>
+      </sc-if>
+      <sc-if value="{{pwOn}}" hint-placeholder-val="{{ false }}">
+        <div style="margin: 20px auto 0; max-width: 400px; text-align: left">
+          <label for="vpw" style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px">Password</label>
+          <div style="position: relative">
+            <input id="vpw" type="{{pwType}}" value="{{pw}}" onChange="{{onPw}}" onKeyDown="{{pwKey}}" autocomplete="new-password" placeholder="At least 8 characters" style="width: 100%; height: 48px; box-sizing: border-box; border: 1px solid {{pwBorder}}; border-radius: 3px; background: #FFFFFF; padding: 0 70px 0 14px; font-family: Karla, sans-serif; font-size: 16px">
+            <button onClick="{{togglePw}}" aria-label="{{pwToggleLabel}}" style="position: absolute; right: 4px; top: 4px; height: 40px; padding: 0 12px; border: none; background: transparent; font-family: Karla, sans-serif; font-size: 13px; font-weight: 700; color: #6B655A; cursor: pointer">{{pwToggleText}}</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{noteOn}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="margin: 16px auto 0; max-width: 400px; font-size: 14px; color: {{noteFg}}; background: {{noteBg}}; border-radius: 3px; padding: 10px 12px">{{note}}</div>
+      </sc-if>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin: 26px auto 0; max-width: 400px">
+        <sc-if value="{{goOn}}" hint-placeholder-val="{{ true }}">
+          <a href="Main.dc.html" onClick="{{go}}" style="display: flex; align-items: center; justify-content: center; height: 52px; border-radius: 3px; background: #2B2A27; color: #FAF8F3; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.08em">{{goLabel}}</a>
+        </sc-if>
+        <sc-if value="{{saveOn}}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{savePw}}" disabled="{{saving}}" style="height: 52px; border-radius: 3px; border: none; background: #2B2A27; color: #FAF8F3; font-family: Karla, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.08em; cursor: pointer">{{saveLabel}}</button>
+        </sc-if>
+        <sc-if value="{{sendOn}}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{send}}" disabled="{{sendOff}}" style="height: 52px; border-radius: 3px; border: {{sendBorder}}; background: {{sendBg}}; color: {{sendFg}}; font-family: Karla, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.08em; cursor: {{sendCursor}}">{{sendLabel}}</button>
+        </sc-if>
+        <sc-if value="{{backOn}}" hint-placeholder-val="{{ false }}">
+          <a href="Login.dc.html" onClick="{{back}}" style="display: flex; align-items: center; justify-content: center; min-height: 40px; font-size: 14px; font-weight: 700">Back to log in</a>
+        </sc-if>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":860}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    // mode: 'verified' (the link worked), 'sent' (just signed up), 'expired' (the link no longer works)
+    this.state = { pw: '', showPw: false, saving: false, mode: (props && props.mode) || 'verified', name: props && 'name' in props ? props.name : 'Maggie', email: props && 'email' in props ? props.email : 'maggie@example.com', sending: false, sent: 0, err: '' };
+  }
+  sendLink(email) { return new Promise((r) => setTimeout(r, 600)); }
+  savePassword(pw) { return new Promise((r) => setTimeout(r, 600)); }
+  renderVals() {
+    const s = this.state, m = s.mode;
+    const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test((s.email || '').trim());
+    const send = async () => {
+      if (this.state.sending) return;
+      if (!emailOk) return this.setState({ err: 'Type the email you signed up with.' });
+      this.setState({ sending: true, err: '' });
+      try { await this.sendLink(this.state.email.trim()); this.setState({ sending: false, sent: this.state.sent + 1 }); }
+      catch (e) { this.setState({ sending: false, err: (e && e.message) || 'That didn’t send. Try again in a minute.' }); }
+    };
+    const copy = {
+      verified: ['Email confirmed', (s.name ? 'Thanks, ' + s.name + '. ' : 'Thanks! ') + 'Your account is all set — your lamp, timer and whiteboard are ready when you are.'],
+      sent: ['Check your inbox', 'We sent a confirmation link to the address below. Open it to finish setting up your space.'],
+      requested: ['Request sent', (s.name ? 'Thanks, ' + s.name + '. ' : 'Thanks! ') + 'SPACE150 is invite-only for now. We’ll email you at the address below once your space is ready.'],
+      setpw: ['Choose a password', (s.name ? 'You’re in, ' + s.name + '! ' : 'You’re in! ') + 'Pick a password so you can log in next time.'],
+      expired: ['This link has expired', 'Confirmation links work only once. If you already confirmed your email, just log in. If not, enter your email and we’ll send a new link.'],
+    }[m] || ['', ''];
+    const noteText = s.err || (s.sent ? (m === 'expired' ? 'If that email still needs confirming, a new link is on its way. It can take a few minutes, so check your spam folder too.' : 'Sent again. It can take a few minutes, so check your spam folder too.') : '');
+    const secondary = m === 'sent';
+    return {
+      heading: copy[0], sub: copy[1],
+      glow: m === 'expired' ? 0.15 : 1, shade: m === 'expired' ? '#EFEBE3' : '#FFFDF6',
+      sealOn: m === 'verified' || m === 'setpw', clockOn: m === 'expired',
+      emailOn: m === 'sent' || m === 'requested', formOn: m === 'expired', email: s.email,
+      onEmail: (e) => this.setState({ email: e.target.value, err: '' }),
+      emailKey: (e) => { if (e.key === 'Enter') { if (e.preventDefault) e.preventDefault(); send(); } },
+      emailBorder: s.err && !emailOk ? '#C8553D' : '#D8D1C2',
+      noteOn: !!noteText, note: noteText, noteFg: s.err ? '#9A3B1C' : '#3E6B33', noteBg: s.err ? '#FBE9E2' : '#EEF3E8',
+      goOn: m === 'verified', goLabel: 'GO TO MY SPACE', go: () => {},
+      sendOn: m === 'sent' || m === 'expired', send, sendOff: s.sending,
+      sendLabel: s.sending ? 'SENDING…' : m === 'expired' ? 'SEND A NEW LINK' : 'RESEND EMAIL',
+      sendBg: secondary ? '#FFFFFF' : '#2B2A27', sendFg: secondary ? '#2B2A27' : '#FAF8F3', sendBorder: secondary ? '1px solid #2B2A27' : 'none',
+      sendCursor: s.sending ? 'default' : 'pointer',
+      backOn: m === 'sent' || m === 'expired' || m === 'requested', back: () => {},
+      pwOn: m === 'setpw', saveOn: m === 'setpw', pw: s.pw, onPw: (e) => this.setState({ pw: e.target.value, err: '' }),
+      pwType: s.showPw ? 'text' : 'password', togglePw: () => this.setState({ showPw: !s.showPw }),
+      pwToggleText: s.showPw ? 'Hide' : 'Show', pwToggleLabel: s.showPw ? 'Hide password' : 'Show password',
+      pwBorder: s.err && m === 'setpw' ? '#C8553D' : '#D8D1C2', saving: s.saving,
+      saveLabel: s.saving ? 'SAVING…' : 'SAVE AND GO TO MY SPACE',
+      savePw: async () => {
+        if (this.state.saving) return;
+        if ((this.state.pw || '').length < 8) return this.setState({ err: 'Use at least 8 characters.' });
+        this.setState({ saving: true, err: '' });
+        try { await this.savePassword(this.state.pw); this.setState({ saving: false }); }
+        catch (e) { this.setState({ saving: false, err: (e && e.message) || 'That didn’t save. Try again.' }); }
+      },
+      pwKey: (e) => { if (e.key === 'Enter') { if (e.preventDefault) e.preventDefault(); this.renderVals().savePw(); } },
+    };
+  }
+}
+</script>
+</body>
+</html>

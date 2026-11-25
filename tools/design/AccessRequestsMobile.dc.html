@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SPACE150 — Access requests</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&amp;family=Karla:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#2B2A27}a:hover{color:#B5562E}
+input:focus{outline:2px solid #E8A838;outline-offset:1px}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 844px; background: #EDE8DD; color: #2B2A27; font-family: Karla, system-ui, sans-serif; padding: 16px 12px; box-sizing: border-box; display: flex; justify-content: center">
+  <main style="width: 100%; max-width: 760px; align-self: flex-start; background: #FAF8F3; border: 1px solid #D8D1C2; border-radius: 4px; box-shadow: 0 18px 40px rgba(43, 42, 39, 0.10)">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 18px; border-bottom: 1px solid #D8D1C2; background-image: radial-gradient(#E3DDD0 1px, transparent 1px); background-size: 18px 18px">
+      <div style="font-family: Newsreader, serif; font-size: 18px; letter-spacing: 0.18em">SPACE150</div>
+      <a href="MainMobile.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; font-size: 14px; font-weight: 700">← Back to your space</a>
+    </div>
+    <section style="padding: 18px 18px 24px">
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px; border-bottom: 1px solid #2B2A27; padding-bottom: 10px">
+        <h1 style="margin: 0; font-family: Newsreader, serif; font-weight: 400; font-size: 30px; line-height: 1.1">Access requests</h1>
+        <span style="font-size: 13px; color: #6B655A">{{countText}}</span>
+      </div>
+      <div role="group" aria-label="Show" style="display: inline-flex; margin-top: 14px; border: 1px solid #2B2A27; border-radius: 3px; overflow: hidden">
+        <sc-for list="{{filters}}" as="fl" hint-placeholder-count="3">
+          <button onClick="{{fl.pick}}" aria-pressed="{{fl.on}}" style="min-height: 36px; padding: 0 10px; border: none; background: {{fl.bg}}; color: {{fl.fg}}; font-family: Karla, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer">{{fl.label}}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{noteOn}}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="margin-top: 14px; font-size: 14px; color: {{noteFg}}; background: {{noteBg}}; border-radius: 3px; padding: 10px 12px">{{note}}</div>
+      </sc-if>
+      <sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 22px 0 0; font-size: 15px; color: #6B655A">{{emptyText}}</p>
+      </sc-if>
+      <div style="margin-top: 8px">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 0; border-bottom: 1px dashed #D8D1C2">
+            <span aria-hidden="true" style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; border: 1px solid #2B2A27; background: {{r.tint}}; display: flex; align-items: center; justify-content: center; font-family: Newsreader, serif; font-size: 18px; font-weight: 600">{{r.initial}}</span>
+            <div style="flex: 1 1 220px; min-width: 0">
+              <div style="font-size: 16px; font-weight: 700">{{r.name}} <span style="font-weight: 400; color: #6B655A">@{{r.username}}</span></div>
+              <div style="font-size: 13px; color: #6B655A; overflow-wrap: anywhere">{{r.email}} · {{r.when}}</div>
+            </div>
+            <sc-if value="{{r.pending}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; gap: 8px; flex: 1 1 100%;">
+                <button onClick="{{r.decline}}" disabled="{{r.busy}}" style="flex: 1 1 0; min-height: 38px; padding: 0 14px; border: 1px solid #C8553D; border-radius: 3px; background: #FFFFFF; color: #B5562E; font-family: Karla, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer">DECLINE</button>
+                <button onClick="{{r.approve}}" disabled="{{r.busy}}" style="flex: 1 1 0; min-height: 38px; padding: 0 16px; border: none; border-radius: 3px; background: #2B2A27; color: #FAF8F3; font-family: Karla, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer">{{r.approveLabel}}</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{r.decided}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 999px; background: {{r.chipBg}}; color: {{r.chipFg}}">{{r.statusText}}</span>
+                <sc-if value="{{r.canResend}}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{r.resend}}" disabled="{{r.busy}}" style="min-height: 34px; padding: 0 6px; border: none; background: transparent; font-family: Karla, sans-serif; font-size: 13px; font-weight: 700; color: #2B2A27; text-decoration: underline; cursor: pointer">{{r.resendLabel}}</button>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const ago = (h) => new Date(Date.now() - h * 3600000).toISOString();
+    this.state = { filter: 'pending', busy: {}, note: '', noteErr: false, list: [
+      { id: 'r1', name: 'Jordan Park', username: 'jordan_p', email: 'jordan@example.com', status: 'pending', created: ago(2) },
+      { id: 'r2', name: 'Maya Kim', username: 'maya.k', email: 'maya@example.com', status: 'pending', created: ago(20) },
+      { id: 'r3', name: 'Sam Lee', username: 'sam.lee', email: 'sam@example.com', status: 'approved', created: ago(50) },
+    ] };
+  }
+  requests() { return this.state.list; }
+  decide(r, approve) { return new Promise((ok) => setTimeout(() => { this.setState({ list: this.state.list.map((x) => x.id === r.id ? { ...x, status: approve ? 'approved' : 'declined' } : x) }); ok(); }, 400)); }
+  invite(r) { return new Promise((ok) => setTimeout(ok, 400)); }
+  renderVals() {
+    const st = this.state, all = this.requests();
+    const when = (iso) => { const m = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000)); return m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' d ago'; };
+    const tints = ['#FBF3D9', '#F2F5EE', '#F3EEF7', '#FBE9E2', '#EEF2F7', '#F5F1E6'];
+    const pending = all.filter((r) => r.status === 'pending');
+    const shown = st.filter === 'all' ? all : all.filter((r) => r.status === st.filter);
+    const run = async (r, job, okText) => {
+      this.setState({ busy: { ...this.state.busy, [r.id]: true }, note: '' });
+      try { await job(); this.setState({ note: okText, noteErr: false }); }
+      catch (e) { this.setState({ note: (e && e.message) || 'Something went wrong.', noteErr: true }); }
+      this.setState({ busy: { ...this.state.busy, [r.id]: false } });
+    };
+    return {
+      countText: pending.length + ' waiting',
+      filters: [['pending', 'WAITING'], ['approved', 'APPROVED'], ['declined', 'DECLINED'], ['all', 'ALL']].map(([id, label]) => { const on = st.filter === id; return { label, on, bg: on ? '#2B2A27' : '#FFFFFF', fg: on ? '#FAF8F3' : '#2B2A27', pick: () => this.setState({ filter: id }) }; }),
+      noteOn: !!st.note, note: st.note, noteFg: st.noteErr ? '#9A3B1C' : '#3E6B33', noteBg: st.noteErr ? '#FBE9E2' : '#EEF3E8',
+      empty: shown.length === 0, emptyText: st.filter === 'pending' ? 'No one is waiting right now.' : 'Nothing here yet.',
+      rows: shown.map((r, i) => {
+        const busy = !!st.busy[r.id];
+        return {
+          ...r, initial: (r.name || r.username || '?').charAt(0).toUpperCase(), tint: tints[i % tints.length], when: when(r.created), busy,
+          pending: r.status === 'pending', decided: r.status !== 'pending',
+          statusText: r.status === 'approved' ? 'APPROVED' : 'DECLINED',
+          chipBg: r.status === 'approved' ? '#EEF3E8' : '#F4F1EA', chipFg: r.status === 'approved' ? '#3E6B33' : '#6B655A',
+          approveLabel: busy ? 'ONE MOMENT…' : 'APPROVE',
+          approve: () => run(r, async () => { await this.decide(r, true); await this.invite(r); }, r.name + ' is approved. We’ve emailed them a link to get in.'),
+          decline: () => run(r, () => this.decide(r, false), r.name + '’s request was declined.'),
+          canResend: r.status === 'approved', resendLabel: busy ? 'Sending…' : 'Resend invite',
+          resend: () => run(r, () => this.invite(r), 'Invite sent again to ' + r.email + '.'),
+        };
+      }),
+    };
+  }
+}
+</script>
+</body>
+</html>
