@@ -18,3 +18,8 @@ if (!url || !key) {
   initSupabase(url, key);
   root.render(<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><App /></BrowserRouter>);
 }
+
+// Keep the app on this device so it opens offline (production builds only).
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => { navigator.serviceWorker.register("/sw.js").catch(() => {}); });
+}

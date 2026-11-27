@@ -32,6 +32,30 @@ export async function myId(): Promise<string> {
   return data.user.id;
 }
 
+/** The session Supabase saved on this device, read without the network (for offline use). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function storedSession(): any | null {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i) || "";
+      if (!/^sb-.+-auth-token$/.test(k)) continue;
+      const v = JSON.parse(localStorage.getItem(k) || "null");
+      const s = v && (v.currentSession || v);
+      if (s && s.user && s.user.id) return s;
+    }
+  } catch { /* private mode */ }
+  return null;
+}
+export const storedUserId = (): string | null => storedSession()?.user?.id ?? null;
+
+/** True when an error came from having no connection. */
+export function isOfflineError(e: unknown): boolean {
+  if (typeof navigator !== "undefined" && navigator.onLine === false) return true;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const m = String((e as any)?.message ?? e ?? "");
+  return /failed to fetch|fetch failed|networkerror|network request failed|load failed|err_internet_disconnected|retryable/i.test(m);
+}
+
 /** Local calendar day as YYYY-MM-DD (star coins and the schedule use the user's own day). */
 export function localDay(d: Date = new Date()): string {
   return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
