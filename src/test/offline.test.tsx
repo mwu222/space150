@@ -59,3 +59,30 @@ it("a deck made offline is saved once when the connection is back", async () => 
   expect(JSON.stringify(saves[0].payload)).toContain("to go");
   expect(errors).toEqual([]);
 });
+
+it("a quiz taken offline sends its score once back online", async () => {
+  await open(); cleanup();
+  goOffline();
+  await open();
+  fireEvent.click(screen.getAllByRole("button").find((b) => /start|take/i.test(b.getAttribute("aria-label") || "") && /Cells quiz/.test(b.getAttribute("aria-label") || ""))!); await wait();
+  expect(document.body.textContent).toContain("What is ATP?");
+  fireEvent.change(screen.getByRole("textbox", { name: /answer/i }), { target: { value: "Energy currency" } });
+  fireEvent.click(screen.getAllByRole("button").find((b) => /check|reveal|submit/i.test(b.textContent || ""))!); await wait();
+  fireEvent.click(screen.getAllByRole("button").find((b) => /^got it/i.test((b.textContent || "").trim()))!); await wait(300);
+  expect(JSON.parse(localStorage.getItem("space150:study:" + ME)!).state.quizzes[0].best).toBe("1 of 1");
+  expect(calls.filter((c) => c.table === "quiz_attempts")).toEqual([]);
+  goOnline(); await wait(300);
+  expect(calls.filter((c) => c.table === "quiz_attempts" && c.op === "insert")).toEqual([expect.objectContaining({ payload: expect.objectContaining({ score: 1, total: 1 }) })]);
+  expect(errors).toEqual([]);
+});
+
+it("a quiz made and taken offline is saved with its score", async () => {
+  await open(); cleanup();
+  const c = JSON.parse(localStorage.getItem("space150:study:" + ME)!);
+  c.state.quizzes.push({ id: 1764230000000, name: "Verbs quiz", subject: "Biology", best: "2 of 2", items: [["ir", "to go"], ["ser", "to be"]] });
+  localStorage.setItem("space150:study:" + ME, JSON.stringify(c));
+  await open(); await wait(300);
+  expect(calls.filter((x) => x.op === "rpc" && x.table === "save_quiz").length).toBe(1);
+  expect(calls.filter((x) => x.table === "quiz_attempts" && x.op === "insert")).toEqual([expect.objectContaining({ payload: expect.objectContaining({ quiz_id: "00000000-0000-0000-0000-000000000051", score: 2, total: 2 }) })]);
+  expect(errors).toEqual([]);
+});

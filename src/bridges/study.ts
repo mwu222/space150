@@ -128,8 +128,14 @@ export function makeStudy(Base) {
         const pm = new Map(B.quizzes.map((q) => [q.id, q]));
         for (const q of next.quizzes) {
           const o = pm.get(q.id);
-          if (!o && !isServerId(q.id)) { await St.saveQuiz(null, q.name, await this.ensureSubject(q.subject), q.items.map(([question, answer]) => ({ question, answer }))); B.quizzes = B.quizzes.concat([q]); changed = true; }
-          else if (o && isServerId(q.id) && o.best !== q.best && q.best) { const m = q.best.match(/(\d+) of (\d+)/); if (m) await St.recordQuizAttempt(q.id, Number(m[1]), Number(m[2])); B.quizzes = swap(B.quizzes, q); }
+          if (!o && !isServerId(q.id)) {
+            const id = await St.saveQuiz(null, q.name, await this.ensureSubject(q.subject), q.items.map(([question, answer]) => ({ question, answer })));
+            B.quizzes = B.quizzes.concat([{ ...q, best: "" }]); changed = true;
+            // Taken before it reached the server (e.g. made and taken offline): send that score too.
+            const m = String(q.best || "").match(/^(\d+) of (\d+)$/);
+            if (m && id) { await St.recordQuizAttempt(id, Number(m[1]), Number(m[2])); B.quizzes = swap(B.quizzes, q); }
+          }
+          else if (o && isServerId(q.id) && o.best !== q.best && q.best) { const m = q.best.match(/^(\d+) of (\d+)$/); if (m) await St.recordQuizAttempt(q.id, Number(m[1]), Number(m[2])); B.quizzes = swap(B.quizzes, q); }
         }
         for (const o of B.quizzes.slice()) if (isServerId(o.id) && !next.quizzes.some((q) => q.id === o.id)) { await St.deleteQuiz(o.id); B.quizzes = B.quizzes.filter((x) => x.id !== o.id); changed = true; }
         B.quizzes = next.quizzes;
